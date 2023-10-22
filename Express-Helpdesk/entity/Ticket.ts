@@ -18,6 +18,9 @@ export class Ticket {
     Priority!: string
 
     @Column()
+    Image!: string
+
+    @Column()
     RequesterID!: number
 
     @Column()

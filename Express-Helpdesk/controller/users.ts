@@ -1,3 +1,4 @@
+import { userSlice } from './../../React-Helpdesk/src/redux/slices/userSlice';
 import { NextFunction, Request, Response } from 'express'
 import { getRepository } from 'typeorm';
 import { Users } from '../entity/Users';
@@ -83,7 +84,7 @@ export const login_user = async (req : Request, res : Response) => {
             }
         }
 
-        jwt.sign(payload, `${process.env.jwt}`, { expiresIn: 60 }, (err, token) => {
+        jwt.sign(payload, `${process.env.jwt}`, { expiresIn: 3600 }, (err, token) => {
             if(err) throw err
             res.send(token)
         })
@@ -115,7 +116,7 @@ export const current_user = async (req : Request, res : Response) => {
     try {
         const { UserID } = req.body
         const userRepository = getRepository(Users);
-        const user = await userRepository.findOne({ where: { UserID }, select : ["UserID", "Username", "Email", "Role"] })
+        const user = await userRepository.findOne({ where: { UserID : req.body.user1.UserID }, select : ["UserID", "Username", "Email", "Role"] })
         if(!user) {
             return res.status(404).send('User not found' );
         }

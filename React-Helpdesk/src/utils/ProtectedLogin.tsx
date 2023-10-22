@@ -2,18 +2,18 @@ import React, { ReactNode } from 'react'
 
 
 
-
+import { useSelector } from 'react-redux'
+import { RootState } from '../redux/store'
 import LoadingToRedirect from './LoadingToRedirect'
-import { useUserStore } from '../store/userStore'
 
 interface ProtectedTypes {
     children : ReactNode
 }
 
 const ProtectedLogin : React.FC<ProtectedTypes> = ({ children }) => {
-    const {userinfo} = useUserStore()
+    const { userinfo } = useSelector((state : RootState) => state.user)
 
-    return userinfo && userinfo.Email ? <LoadingToRedirect To="/" Msg="คุณล็อกอินไปแล้วรู้มั้ย " /> : children 
+    return userinfo && userinfo.Username ? <LoadingToRedirect To="/" Msg="คุณล็อกอินไปแล้วรู้มั้ย " /> : children 
 }
 
 export default ProtectedLogin

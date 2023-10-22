@@ -1,3 +1,4 @@
+import { userSlice } from './../../React-Helpdesk/src/redux/slices/userSlice';
 import { Request, Response } from 'express'
 import { getRepository } from 'typeorm';
 import { Ticket } from '../entity/Ticket';
@@ -7,6 +8,17 @@ export const read_all_ticket = async (req: Request, res: Response) => {
     try {
         const ticketRepository = getRepository(Ticket);
         const ticket = await ticketRepository.find();
+        res.send(ticket);
+    } catch (err) {
+        console.log(err);
+        res.status(500).send('Server Error');
+    }
+}
+
+export const read_ticketb_by_single = async (req : Request, res : Response) => {
+    try {
+        const ticketRepository = getRepository(Ticket);
+        const ticket = await ticketRepository.find({ where: { "RequesterID" : req.body.user1.UserID } });
         res.send(ticket);
     } catch (err) {
         console.log(err);

@@ -15,7 +15,6 @@ const LoadingToRedirect : React.FC<LoadingType> = ({ To, Msg }) => {
             setCount((currentCount) => --currentCount)
         }, 1000)
 
-        // count == 0 && navigate("/login")
         if(count == 0) navigate(`${To}`)
 
         return () => clearInterval(interval)

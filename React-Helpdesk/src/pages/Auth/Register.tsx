@@ -1,4 +1,3 @@
-import { useState, ChangeEvent } from "react";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -6,8 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 
 import { useNavigate } from "react-router-dom";
-
-import { useEffect } from 'react'
+import { useForm, SubmitHandler } from "react-hook-form" 
 
 interface createUser {
   Username: string;
@@ -18,25 +16,14 @@ interface createUser {
 
 const Register = () => {
   const navigate = useNavigate()
-  const [create, setCreate] = useState<createUser>({
-    Username: "",
-    Email: "",
-    Password: "",
-    Confirm_Password: "",
-  });
 
-  
+  const { register, handleSubmit } = useForm<createUser>()
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setCreate({ ...create, [event.target.name]: event.target.value });
-  };
-
-  const onSubmit = async (event: ChangeEvent<HTMLFormElement>) => {
-    try {
-      event.preventDefault();
-      if (create.Password == create.Confirm_Password) {
+  const onSubmit: SubmitHandler<createUser> = async (data) => {
+  try {
+      if (data.Password == data.Confirm_Password) {
         await axios
-          .post(`${import.meta.env.VITE_API}/users/`, { ...create })
+          .post(`${import.meta.env.VITE_API}/users/`, { ...data })
           .then(async (response) => {
             if (response.status === 200) {
               await toast.success(`สมัครสมาชิกสำเร็จ`, {
@@ -48,7 +35,7 @@ const Register = () => {
                 draggable: true,
                 theme: "light",
               });
-              setTimeout((() => navigate('/')), 2000)
+              setTimeout((() => navigate('/login')), 2000)
             }
           });
       } else {
@@ -65,7 +52,8 @@ const Register = () => {
     } catch (e) {
       console.log(e);
     }
-  };
+  }
+
 
   return (
     <div className="flex justify-center items-center min-h-screen ">
@@ -77,7 +65,7 @@ const Register = () => {
           className="mb-6 w-48 mx-auto rounded-lg"
         />
 
-        <form onSubmit={onSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-4">
             <label
               htmlFor="Username"
@@ -85,14 +73,11 @@ const Register = () => {
             >
               Username
             </label>
-            <input
-              type="text"
-              id="Username"
-              name="Username"
-              onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
-              required
+            <input 
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500" 
+            {...register("Username", { required: true, maxLength : 20, pattern: /^[A-Za-z]+$/i })} 
             />
+
           </div>
           <div className="mb-4">
             <label
@@ -101,13 +86,9 @@ const Register = () => {
             >
               Email
             </label>
-            <input
-              type="email"
-              id="Email"
-              name="Email"
-              onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
-              required
+            <input type="email"
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500" 
+            {...register("Email", { required: true, maxLength : 20})} 
             />
           </div>
           <div className="mb-4">
@@ -117,13 +98,9 @@ const Register = () => {
             >
               Password
             </label>
-            <input
-              type="password"
-              id="Password"
-              name="Password"
-              onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
-              required
+            <input type="password"
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500" 
+            {...register("Password", { required: true, maxLength : 20})} 
             />
           </div>
           <div className="mb-4">
@@ -133,24 +110,14 @@ const Register = () => {
             >
               Confirm Password
             </label>
-            <input
-              type="password"
-              id="Confirm_Password"
-              name="Confirm_Password"
-              onChange={handleChange}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
-              required
+            <input type="password"
+            className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500" 
+            {...register("Confirm_Password", { required: true, maxLength : 20 })} 
             />
+
           </div>
-          <div className="mb-6">
-            <label className="inline-flex items-center">
-              <input type="checkbox" className="form-checkbox" required />
-              <span className="ml-2">I agree to the terms and conditions</span>
-            </label>
-          </div>
-          <button className="w-full bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:bg-blue-600">
-            Register
-          </button>
+
+          <input type="submit" className="w-full bg-blue-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:bg-blue-600" />
           <ToastContainer />
         </form>
         <p className="text-gray-600 mt-4">
