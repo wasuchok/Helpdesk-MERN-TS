@@ -8,6 +8,9 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 
 import { useNavigate } from "react-router-dom";
+import { userLogin } from "../../redux/slices/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 interface IFormInput {
   Username: string;
@@ -16,6 +19,8 @@ interface IFormInput {
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch()
+  const { userinfo } = useSelector((state : RootState) => (state.user))
 
 
   const { control, handleSubmit } = useForm<IFormInput>({
@@ -37,9 +42,9 @@ const Login: React.FC = () => {
            
           localStorage.setItem("userinfo", response.data);
 
-          await toast.success(`เข้าสู่ระบบสำเร็จ`);
+          toast.success(`เข้าสู่ระบบสำเร็จ`);
 
-          await setTimeout(() => navigate("/"), 2000);
+          setTimeout(() => navigate('/') ,2000)
 
           }
         });

@@ -4,7 +4,7 @@ import React, { ReactNode } from 'react'
 
 import { useSelector } from 'react-redux'
 import { RootState } from '../redux/store'
-import LoadingToRedirect from './LoadingToRedirect'
+import Redirect from './Redirect'
 
 interface ProtectedTypes {
     children : ReactNode
@@ -13,7 +13,7 @@ interface ProtectedTypes {
 const ProtectedLogin : React.FC<ProtectedTypes> = ({ children }) => {
     const { userinfo } = useSelector((state : RootState) => state.user)
 
-    return userinfo && userinfo.Username ? <LoadingToRedirect To="/" Msg="คุณล็อกอินไปแล้วรู้มั้ย " /> : children 
+    return userinfo && userinfo.Role != 0 ? <Redirect To="/" /> : children 
 }
 
 export default ProtectedLogin

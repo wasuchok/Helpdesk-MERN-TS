@@ -6,7 +6,6 @@ interface UserInfo {
     Username: string;
     Email? : string
     Role : number
-    isLogin : boolean
 }
 
 interface UserState {
@@ -16,8 +15,7 @@ interface UserState {
 const initialState: UserState = {
   userinfo : {
     Username : "",
-    Role : 6,
-    isLogin : false
+    Role : 0,
   }
 }
 
@@ -29,12 +27,11 @@ export const userSlice = createSlice({
       state.userinfo = action.payload
     },
     logOut : (state : UserState) => {
+      localStorage.removeItem('userinfo')
       state.userinfo = {
         Username : "",
-        Role : 6,
-        isLogin : false
+        Role : 0,
       }
-      localStorage.removeItem('userinfo')
     }
   },
 })

@@ -5,15 +5,18 @@ import { RootState } from '../../redux/store';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 
 interface CreateTicket {
   Title: string;
   Description: string;
   Priority: string;
   Image: File | null | any;
+  Status : string
 }
 
 const TicketForm = () => {
+  const navigate = useNavigate()
     const user = useSelector((state : RootState) => state.user)
     const { userinfo } = user
 
@@ -25,14 +28,16 @@ const TicketForm = () => {
         Title: "",
         Description: "",
         Priority : "",
-        Image : null
+        Image : null,
+        Status : "Open"
     },
   });
 
   const onSubmit: SubmitHandler<CreateTicket> = async (data) => {
-    const formData = new FormData();
     setLoading(true)
     setMsg("กำลังโหลด")
+    
+    const formData = new FormData();
     formData.append('file', data.Image);
     formData.append('upload_preset', `${import.meta.env.VITE_PRESET}`);
     formData.append('folder', "helpdesk");
@@ -54,6 +59,7 @@ const TicketForm = () => {
                  setLoading(false)
                  setMsg("สร้างใบเสร็จ")
                  toast.success(`สร้างใบเสร็จสำเร็จแล้ว`);
+                 navigate('/')
             }
         })
        

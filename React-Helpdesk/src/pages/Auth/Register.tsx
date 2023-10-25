@@ -11,6 +11,7 @@ interface createUser {
   Username: string;
   Email: string;
   Password: string;
+  Role : number
   Confirm_Password: string;
 }
 
@@ -22,6 +23,7 @@ const Register = () => {
   const onSubmit: SubmitHandler<createUser> = async (data) => {
   try {
       if (data.Password == data.Confirm_Password) {
+        data.Role = 6;
         await axios
           .post(`${import.meta.env.VITE_API}/users/`, { ...data })
           .then(async (response) => {

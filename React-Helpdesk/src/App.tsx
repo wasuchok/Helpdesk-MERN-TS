@@ -1,6 +1,5 @@
 
 import axios from 'axios'
-import { useEffect } from 'react';
 
 
 //Router
@@ -9,10 +8,18 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 //Components
 import Navbar from "./components/Navbar";
 
+//Admin
+import Admin from './pages/Admin/Index';
+import ViewTicket from './pages/Admin/ViewTicket'
 
-//Home
+//Technician
+import Technician from './pages/Technician/Index'
+
+
+//User
 import Index from "./pages/Home/Index";
 import TicketForm from './pages/Home/TicketForm';
+import ViewTicketUser from './pages/Home/ViewTicketUser';
 
 //Auth
 import Register from "./pages/Auth/Register";
@@ -29,7 +36,10 @@ import { userLogin } from "./redux/slices/userSlice";
 import ProtectedLogin from './utils/ProtectedLogin';
 import ProtectedRoute from './utils/ProtectedRoute';
 import SidebarUser from './components/SidebarUser';
-
+import ProtectedAdminRoute from './utils/ProtectedAdminRoute';
+import SidebarAdmin from './components/SidebarAdmin';
+import SidebarTechnician from './components/SidebarTechnician';
+import ProtectedTechnicianRoute from './utils/ProtectedTechnicianRoute';
 
 
 const App = () => {
@@ -51,13 +61,12 @@ const App = () => {
             }
           });
       } catch (err : any) {
-        if (err.response.data == "JWT Expired" || err.response.status == 500) {
+        if (err.response.data == "JWT Expire") {
           localStorage.removeItem("userinfo");
           dispatch(
             userLogin({
               Username: "",
-              Role: 6,
-              isLogin: false,
+              Role: 0,
             })
           );
           navigate("/login");
@@ -103,6 +112,19 @@ const App = () => {
           />
 
           <Route
+            path="/view_ticket/:id"
+            element={
+              <ProtectedRoute>
+                <div className="flex">
+                <SidebarUser />
+                <ViewTicketUser />
+                </div>
+                
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
             path="/register"
             element={
               <ProtectedLogin>
@@ -121,6 +143,50 @@ const App = () => {
           />
 
           {/* End Route User */}
+
+          {/* Start Route Admin */}
+
+          <Route
+            path="/admin/"
+            element={
+              <ProtectedAdminRoute>
+                <div className="flex">
+                  <SidebarAdmin />
+                <Admin />
+                </div>
+              </ProtectedAdminRoute>
+            }
+          />
+
+          <Route
+            path="/admin/view_ticket/:id"
+            element={
+              <ProtectedAdminRoute>
+                <div className="flex">
+                  <SidebarAdmin />
+                <ViewTicket />
+                </div>
+              </ProtectedAdminRoute>
+            }
+          />
+
+          {/* End Route Admin */}
+
+          {/* Start Route Technician */}
+
+          <Route
+            path="/technician/"
+            element={
+              <ProtectedTechnicianRoute>
+                <div className="flex">
+                  <SidebarTechnician />
+                <Technician />
+                </div>
+              </ProtectedTechnicianRoute>
+            }
+          />
+
+          {/* End Route Technician */}
 
         </Routes>
       </div>

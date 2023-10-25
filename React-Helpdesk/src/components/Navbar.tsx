@@ -38,11 +38,6 @@ const Navbar = () => {
         Edit User
       </Link>
       </li>
-      <li className={`${userinfo.Role != 6 ? "" : "hidden"}`}>
-        <Link to="/admin">
-        Mechanical
-      </Link>
-      </li>
 
       <li><button onClick={Logout}>Logout</button></li>
     </ul>

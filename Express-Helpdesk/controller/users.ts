@@ -84,7 +84,7 @@ export const login_user = async (req : Request, res : Response) => {
             }
         }
 
-        jwt.sign(payload, `${process.env.jwt}`, { expiresIn: 3600 }, (err, token) => {
+        jwt.sign(payload, `${process.env.jwt}`, { expiresIn: "60m" }, (err, token) => {
             if(err) throw err
             res.send(token)
         })
@@ -114,7 +114,6 @@ export const auth_user = async (req : Request, res : Response, next : NextFuncti
 
 export const current_user = async (req : Request, res : Response) => {
     try {
-        const { UserID } = req.body
         const userRepository = getRepository(Users);
         const user = await userRepository.findOne({ where: { UserID : req.body.user1.UserID }, select : ["UserID", "Username", "Email", "Role"] })
         if(!user) {
@@ -127,11 +126,34 @@ export const current_user = async (req : Request, res : Response) => {
     }
 }
 
+export const read_all_technician = async (req: Request, res: Response) => {
+    try {
+        const n1 = 1;
+        const n6 = 6;
+        const userRepository = getRepository(Users);
+        const users = await userRepository
+            .createQueryBuilder('users')
+            .select([
+                'role.RoleName',
+                'users.*',
+            ])
+            .where('users.Role != :n1 AND users.Role != :n2', { n1, n2: n6 })
+            .innerJoin('role', 'role', 'users.Role = role.RoleID')
+            .getRawMany(); 
+
+        res.send(users);
+    } catch (err) {
+        console.log(err);
+        res.status(500).send('Server Error');
+    }
+}
+
+
 export const check_admin = async (req : Request, res : Response, next : NextFunction) => {
     try {
         const userRepository = getRepository(Users);
-        const user = await userRepository.findOne({ where: { UserID : req.body.UserID }, select : ["UserID", "Username", "Email", "Role"] })
-        if(user && user.Role == "Admin") {
+        const user = await userRepository.findOne({ where: { UserID : req.body.user1.UserID }, select : ["UserID", "Username", "Email", "Role"] })
+        if(user && user.Role == 1) {
             next()
         } else {
             res.status(403).send('Admin Access Denied')

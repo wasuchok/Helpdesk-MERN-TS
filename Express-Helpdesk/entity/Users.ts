@@ -15,6 +15,6 @@ export class Users {
     Email!: string
 
     @Column()
-    Role!: string
+    Role!: number
     
 }
