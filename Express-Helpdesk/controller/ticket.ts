@@ -124,3 +124,17 @@ export const delete_ticket = async (req: Request, res: Response) => {
         res.status(500).send('Server Error');
     }
 }
+
+export const read_ticket_all_single_by_technician = async (req : Request, res : Response) => {
+    try {
+        const ticketRepository = getRepository(Ticket)
+        const ticket = await ticketRepository.find({ where : { "AssigneeID" : req.body.id }})
+        if(ticket) {
+            res.send(ticket)
+        }
+    } catch (err) {
+        console.log(err);
+        res.status(500).send('Server Error');
+    }
+}
+

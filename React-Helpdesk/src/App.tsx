@@ -61,7 +61,7 @@ const App = () => {
             }
           });
       } catch (err : any) {
-        if (err.response.data == "JWT Expire") {
+        if (err.response.data == "JWT Expired") {
           localStorage.removeItem("userinfo");
           dispatch(
             userLogin({
@@ -89,7 +89,7 @@ const App = () => {
         <Route
             path="/"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={[6]}>
                 <div className="flex">
                 <SidebarUser />
                 <Index />
@@ -101,7 +101,7 @@ const App = () => {
         <Route
             path="/ticket_form"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={[6]}>
                 <div className="flex">
                 <SidebarUser />
                 <TicketForm />
@@ -114,7 +114,7 @@ const App = () => {
           <Route
             path="/view_ticket/:id"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute allowedRoles={[6]}>
                 <div className="flex">
                 <SidebarUser />
                 <ViewTicketUser />
@@ -127,18 +127,18 @@ const App = () => {
           <Route
             path="/register"
             element={
-              <ProtectedLogin>
+              <ProtectedRoute allowedRoles={[0]}>
                 <Register />
-              </ProtectedLogin>
+              </ProtectedRoute>
             }
           />
 
           <Route
             path="/login"
             element={
-            <ProtectedLogin>
+            <ProtectedRoute allowedRoles={[0]}>
                 <Login />
-            </ProtectedLogin>
+            </ProtectedRoute>
             }
           />
 
@@ -149,24 +149,24 @@ const App = () => {
           <Route
             path="/admin/"
             element={
-              <ProtectedAdminRoute>
+              <ProtectedRoute allowedRoles={[1]}>
                 <div className="flex">
                   <SidebarAdmin />
                 <Admin />
                 </div>
-              </ProtectedAdminRoute>
+              </ProtectedRoute>
             }
           />
 
           <Route
             path="/admin/view_ticket/:id"
             element={
-              <ProtectedAdminRoute>
+              <ProtectedRoute allowedRoles={[1]}>
                 <div className="flex">
                   <SidebarAdmin />
                 <ViewTicket />
                 </div>
-              </ProtectedAdminRoute>
+              </ProtectedRoute>
             }
           />
 
@@ -177,12 +177,12 @@ const App = () => {
           <Route
             path="/technician/"
             element={
-              <ProtectedTechnicianRoute>
+              <ProtectedRoute allowedRoles={[2,3,4,5]}>
                 <div className="flex">
                   <SidebarTechnician />
                 <Technician />
                 </div>
-              </ProtectedTechnicianRoute>
+              </ProtectedRoute>
             }
           />
 

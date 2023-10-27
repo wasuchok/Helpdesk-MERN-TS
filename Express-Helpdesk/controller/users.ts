@@ -1,4 +1,3 @@
-import { userSlice } from './../../React-Helpdesk/src/redux/slices/userSlice';
 import { NextFunction, Request, Response } from 'express'
 import { getRepository } from 'typeorm';
 import { Users } from '../entity/Users';
@@ -84,7 +83,7 @@ export const login_user = async (req : Request, res : Response) => {
             }
         }
 
-        jwt.sign(payload, `${process.env.jwt}`, { expiresIn: "60m" }, (err, token) => {
+        jwt.sign(payload, `${process.env.jwt}`, { expiresIn: 3600 }, (err, token) => {
             if(err) throw err
             res.send(token)
         })

@@ -14,7 +14,6 @@ router.post('/',  create_user)
 router.put('/', auth_user, update_user)
 router.delete('/:id', auth_user, delete_user)
 router.get('/curent_user', auth_user, current_user)
-
 router.get('/choose_technician', auth_user, check_admin, read_all_technician)
 
 //Auth

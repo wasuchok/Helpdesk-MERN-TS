@@ -1,18 +1,41 @@
-import React, { ReactNode } from 'react'
+import React, { ReactNode, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
+import { useNavigate } from 'react-router-dom';
 
-import { useSelector } from 'react-redux'
-import { RootState } from '../redux/store'
-import Redirect from './Redirect'
-
-interface ProtectedTypes {
-    children : ReactNode
+interface ProtectedRouteProps {
+  allowedRoles: number[]; 
+  children: ReactNode;
 }
 
-const ProtectedRoute : React.FC<ProtectedTypes> = ({ children }) => {
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles, children }) => {
+  const navigate = useNavigate();
+  const { userinfo } = useSelector((state: RootState) => state.user);
 
-    const { userinfo } = useSelector((state : RootState) => (state.user))
+  const isAuthorized = allowedRoles.includes(userinfo.Role);
 
-  return userinfo && userinfo.Role == 6 ? children : userinfo && userinfo.Role != 0 && userinfo.Role == 1 ? <Redirect To="/admin"  /> : userinfo.Role != 1 && userinfo.Role != 0 && userinfo.Role != 6 ? <Redirect To="/technician"  /> : <Redirect To="/login"  />
-}
+  useEffect(() => {
+    if (!isAuthorized) {
+      switch (userinfo.Role) {
+        case 1:
+          navigate('/admin');
+          break;
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+          navigate('/technician');
+          break;
+          case 6 :
+            navigate('/');
+            break;
+        default:
+          navigate('/login');
+      }
+    }
+  }, [isAuthorized, userinfo.Role, navigate]);
 
-export default ProtectedRoute
+  return isAuthorized ? children : <div>No Access</div>;
+};
+
+export default ProtectedRoute;
