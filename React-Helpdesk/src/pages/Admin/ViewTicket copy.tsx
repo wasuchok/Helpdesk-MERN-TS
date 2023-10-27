@@ -8,7 +8,6 @@ import { useSelector } from "react-redux";
 import {
   faCheck,
   faCircleExclamation,
-  faGear,
   faLightbulb,
   faSmile,
 } from "@fortawesome/free-solid-svg-icons";
@@ -23,7 +22,6 @@ interface TicketType {
   Priority: string;
   Requester_Username?: string;
   Assignee_Username?: string;
-  Requester_Email? : string
 }
 
 interface technicianType {
@@ -101,7 +99,6 @@ const ViewTicket = () => {
           TicketID: data.TicketID,
           UserID: userinfo.UserID,
           CommentText: commentText.current.value,
-          AssigneeID : idtechnician
         },
         {
           headers: {
@@ -120,76 +117,88 @@ const ViewTicket = () => {
 
   return (
     <>
-    <div className="grid grid-cols-1 xl:grid-cols-2">
-    <div className="mx-5">
-        <div className="my-2 flex">
-            <h1 className="text-2xl font-semibold text-sky-700 mr-5">Ticket ID : {data.TicketID}</h1>
-            <h1 className="text-2xl font-semibold text-slate-600">{data.Title}</h1>
-            {!data.Assignee_Username && (
+      <div className="container mx-2 p-4">
+        <div className="bg-white p-4 rounded-lg shadow">
+          <h1 className="text-2xl font-bold mb-4">{data.Title}</h1>
+          {!data.Assignee_Username && (
             <button
-              className="bg-blue-600 text-white font-bold w-20 h-7 rounded-lg hover:bg-blue-500 mb-3 ml-3"
+              className="bg-blue-600 text-white font-bold w-20 h-7 rounded-lg hover:bg-blue-500 mb-3"
               onClick={() => setShow(true)}
             >
               เลือกช่าง
             </button>
           )}
-        </div>
 
-        <hr />
+          <img
+            src={`${data.Image}`}
+            className="w-1/2 mb-4 object-cover rounded-lg"
+          />
 
-        <div className="m-10">
-            <h2 className="text-xl font-semibold text-sky-700">ข้อมูลผู้ใช้</h2>
-            <div className="flex justify-between my-10">
-                <h2 className="text-lg p-1">ชื่อผู้ใช้</h2>
-                <h2 className="text-lg bg-violet-600 text-white rounded-lg p-1 cursor-pointer hover:bg-violet-700">{data.Requester_Username}</h2>
+          <div className="stats shadow">
+            <div className="stat">
+              <div className="stat-figure bg-purple-600 w-10 text-center h-10 rounded-lg">
+                <FontAwesomeIcon
+                  icon={faLightbulb}
+                  color="white"
+                  className="my-3"
+                />
+              </div>
+              <div className="stat-title">รหัสการแจ้งซ่อม</div>
+              <div className="stat-value text-primary">{data.TicketID}</div>
             </div>
-            <div className="flex justify-between my-10">
-                <h2 className="text-lg p-1">อีเมล</h2>
-                <h2 className="text-lg bg-violet-600 text-white rounded-lg p-1 cursor-pointer hover:bg-violet-700">{data.Requester_Email}</h2>
-            </div>
-        </div>
 
-
-        <hr />
-
-        <div className="m-10">
-            <h2 className="text-xl font-semibold text-sky-700">รายละเอียดการแจ้งซ่อม</h2>
-            <div className="mt-3">
-                <img className="w-auto xl:max-w-xl rounded-xl" src={data.Image} alt="" />
+            <div className="stat">
+              <div className="stat-figure bg-pink-500 w-10 text-center h-10 rounded-lg">
+                <FontAwesomeIcon
+                  icon={faSmile}
+                  color="white"
+                  className="my-3"
+                />
+              </div>
+              <div className="stat-title">สถานะ</div>
+              <div className="stat-value text-secondary">{data.Status}</div>
             </div>
-            <div className="flex justify-between my-10">
-                <h2 className="text-lg p-1">หัวข้อปัญหา</h2>
-                <h2 className="text-lg bg-emerald-600 text-white rounded-lg p-1 cursor-pointer hover:bg-emerald-700">{data.Title}</h2>
+
+            <div className="stat">
+              <div className="stat-figure bg-orange-600 w-10 text-center h-10 rounded-lg">
+                <FontAwesomeIcon
+                  icon={faCircleExclamation}
+                  color="white"
+                  className="my-3"
+                />
+              </div>
+              <div className="stat-title">ความสำคัญ</div>
+              <div className="stat-value">{data.Priority}</div>
+              <div className="stat-desc text-secondary">ลำดับความสำคัญ</div>
             </div>
-            <div className="flex justify-between my-10">
-                <div className="flex">
-                    <h2 className="text-lg p-1">สถานะแจ้งซ่อม</h2>
+          </div>
+
+          <div className="mt-8">
+            <h2 className="text-xl font-semibold">ผู้แจ้ง:</h2>
+            <p className="mt-2 text-lg bg-gray-100 p-2 rounded-md">
+              {data.Requester_Username}
+            </p>
+          </div>
+          <div className="mt-8">
+            <h2 className="text-xl font-semibold">ผู้รับผิดชอบ:</h2>
+            <p className="mt-2 text-lg bg-gray-100 p-2 rounded-md">
+              {data.Assignee_Username}
+            </p>
+          </div>
+          <div className="mt-8">
+            <h2 className="text-lg font-semibold">รายละเอียด:</h2>
+            <ul className="mt-2">
+              <li className="mb-2">
+                <div className="bg-gray-100 p-2 rounded-md">
+                  {data.Description}
                 </div>
-                <h2 className="text-lg bg-stone-600 text-white rounded-lg p-1 cursor-pointer">{data.Status}</h2>
-            </div>
-            <div className="flex justify-between my-10">
-                <h2 className="text-lg p-1">ลำดับความสำคัญ</h2>
-                <h2 className={`text-lg text-white rounded-lg p-1 cursor-pointer
-                ${data.Priority == "high" ? 'bg-red-600 hover:bg-red-700' : data.Priority == "medium" ? 'bg-orange-500 hover:bg-orange-600' : 'bg-green-500 hover:bg-green-600'}
-                `}>{data.Priority}</h2>
-            </div>
-            <div className="flex flex-col my-10">
-                <h2 className="text-lg p-1">รายละเอียด</h2>
-                <p className="mt-5 w-auto p-1 rounded-lg text-lg text-white bg-emerald-600 hover:bg-emerald-700 cursor-pointer">{data.Description}</p>
-            </div>
+              </li>
+            </ul>
+          </div>
         </div>
-        
+      </div>
 
-    </div>
-
-    <div className="m-10 max-w-lg">
-        <div className="flex">
-            <h2 className="text-xl font-semibold text-sky-700">ผู้รับผิดชอบ</h2>
-            <h3 className="text-lg ml-4 font-semibold">{!!data.Assignee_Username ? data.Assignee_Username : 'ยังไม่มีผู้รับผิดชอบ'}</h3>
-        </div>
-    </div>
-
-    <ModalChooseTechnician isVisible={show} onClose={() => setShow(false)}>
+      <ModalChooseTechnician isVisible={show} onClose={() => setShow(false)}>
         <h1 className="text-lg font-bold text-center">เลือกช่าง</h1>
         <hr />
 
@@ -257,10 +266,6 @@ const ViewTicket = () => {
           </button>
         </div>
       </ModalComment>
-    
-
-
-    </div>
     </>
   );
 };

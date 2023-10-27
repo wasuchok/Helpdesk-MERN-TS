@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { faEye } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faWrench } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 
 
@@ -48,21 +48,24 @@ const TableAllTicketByTechnician = () => {
     setRecords(data.slice(from, to));
   }, [page, pageSize]);
 
+  
+  const FetchAllTicket = async (authtoken : string) => {
+    await axios.get(`${import.meta.env.VITE_API}/ticket/all_single_by_technician`, {
+      headers : {
+        authtoken
+      }
+    }).then((response) => {
+      if (response.status == 200) {
+        response.data.map((ticket: ITicket, i: number) => {
+          Ticket.push({ ...ticket, id: i + 1 });
+        });
+        setRecords(Ticket);
+        setData(Ticket);
+      }
+    })
+  }
 
-  const FetchAllTicket = async (authtoken: string) => {
-    const response = await axios.get(`${import.meta.env.VITE_API}/ticket/all_single`, {
-      headers: {
-        authtoken,
-      },
-    });
-    if (response.status == 200) {
-      response.data.map((ticket: ITicket, i: number) => {
-        Ticket.push({ ...ticket, id: i + 1 });
-      });
-      setRecords(Ticket);
-      setData(Ticket);
-    }
-  };
+
 
   useEffect(() => {
     FetchAllTicket(localStorage.userinfo);
@@ -122,12 +125,19 @@ const TableAllTicketByTechnician = () => {
             accessor: "Tools",
             width: 130,
             render: ({ TicketID }) => (
-              <div className="text-center">
+              <div className="">
                 <button
                   className="bg-blue-600 w-10 h-10 rounded-xl hover:bg-blue-700 mx-1 my-1"
                 >
-                <Link to={`/view_ticket/${TicketID}`}>
+                <Link to={`/technician/view_ticket/${TicketID}`}>
                   <FontAwesomeIcon icon={faEye} color="white" />
+                  </Link>
+                </button>
+                <button
+                  className="bg-orange-600 w-10 h-10 rounded-xl hover:bg-orange-700 mx-1 my-1"
+                >
+                <Link to={`/technician/view_ticket/${TicketID}`}>
+                  <FontAwesomeIcon icon={faWrench} color="white" />
                   </Link>
                 </button>
 

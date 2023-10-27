@@ -40,7 +40,8 @@ export const read_ticket_single = async (req: Request, res: Response) => {
             .select([
                 'ticket.*',
                 'requester.Username AS Requester_Username',
-                'assignee.Username AS Assignee_Username'
+                'assignee.Username AS Assignee_Username',
+                'requester.Email AS Requester_Email'
             ])
             .innerJoin('users', 'requester', 'ticket.RequesterID = requester.UserID')
             .leftJoin('users', 'assignee', 'ticket.AssigneeID = assignee.UserID')
@@ -71,11 +72,35 @@ export const create_commentText = async (req : Request, res : Response, next : N
             if (!updatedTicket) {
               return res.status(404).send('Ticket not found');
             }
-            ticketRepository.merge(updatedTicket, { "AssigneeID" : req.body.UserID });
+            ticketRepository.merge(updatedTicket, { "AssigneeID" : req.body.AssigneeID });
             const result = await ticketRepository.save(updatedTicket);
             res.send(result)
             
         } 
+    } catch (err) {
+        console.log(err);
+        res.status(500).send('Server Error');
+    }
+}
+
+export const read_comment_by_technician = async (req : Request, res : Response) => {
+    try {
+        const { ticketID } = req.params
+        const commentRepository = getRepository(Comment)
+        const comment = await commentRepository
+        .createQueryBuilder('comment')
+        .select([
+            'comment.*',
+            'user.Username',
+            'user.Email'
+        ])
+        .innerJoin('users', 'user', 'comment.UserID = user.UserID')
+        .where('comment.TicketID = :ticketID', { ticketID })
+        .getRawOne();
+
+        if(comment) {
+            res.send(comment)
+        }
     } catch (err) {
         console.log(err);
         res.status(500).send('Server Error');
@@ -125,10 +150,10 @@ export const delete_ticket = async (req: Request, res: Response) => {
     }
 }
 
-export const read_ticket_all_single_by_technician = async (req : Request, res : Response) => {
+export const read_ticket_all_single_by_technician = async (req : any, res : Response) => {
     try {
         const ticketRepository = getRepository(Ticket)
-        const ticket = await ticketRepository.find({ where : { "AssigneeID" : req.body.id }})
+        const ticket = await ticketRepository.find({ where : { "AssigneeID" : req.body.user1.UserID }})
         if(ticket) {
             res.send(ticket)
         }

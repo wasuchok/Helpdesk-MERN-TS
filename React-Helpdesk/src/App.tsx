@@ -14,6 +14,7 @@ import ViewTicket from './pages/Admin/ViewTicket'
 
 //Technician
 import Technician from './pages/Technician/Index'
+import ViewTicketTechnician from './pages/Technician/ViewTicketTechnician';
 
 
 //User
@@ -40,6 +41,7 @@ import ProtectedAdminRoute from './utils/ProtectedAdminRoute';
 import SidebarAdmin from './components/SidebarAdmin';
 import SidebarTechnician from './components/SidebarTechnician';
 import ProtectedTechnicianRoute from './utils/ProtectedTechnicianRoute';
+
 
 
 const App = () => {
@@ -181,6 +183,18 @@ const App = () => {
                 <div className="flex">
                   <SidebarTechnician />
                 <Technician />
+                </div>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route 
+            path="/technician/view_ticket/:id"
+            element={
+              <ProtectedRoute allowedRoles={[2,3,4,5]}>
+                <div className="flex">
+                  <SidebarTechnician />
+                <ViewTicketTechnician />
                 </div>
               </ProtectedRoute>
             }
