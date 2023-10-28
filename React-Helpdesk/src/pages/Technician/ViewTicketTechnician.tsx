@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios'
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import Modal from '../../components/Modal';
 
 interface TicketType {
     TicketID : number
@@ -25,6 +26,8 @@ interface CommentType {
   
 
 const ViewTicketTechnician = () => {
+    const [show, setShow] = useState<boolean>(false)
+
     const [data, setData] = useState<TicketType>({
         TicketID : 0,
         Title : "",
@@ -69,6 +72,23 @@ const ViewTicketTechnician = () => {
         fetchComment(localStorage.userinfo)
       },[])
 
+      const changeStatusTicketByTechnician = async (authtoken : string) => {
+        await axios.post(`${import.meta.env.VITE_API}/ticket/update_ticket`,{ 
+            "Status" : `${data.Status == "Open" ? 'In Progress' : data.Status == "In Progress" ? 'Wait' : 'Wait'}`,
+            "TicketID" : data.TicketID
+            },{
+                headers: {
+                    authtoken
+            },
+        }).then((response) => {
+            console.log(response)
+            fetchTicket(localStorage.userinfo)
+            fetchComment(localStorage.userinfo)
+            setShow(false)
+        })
+
+      }
+
   return (
     <>
     <div className="grid grid-cols-1 xl:grid-cols-2">
@@ -107,16 +127,19 @@ const ViewTicketTechnician = () => {
             <div className="flex justify-between my-10">
                 <div className="flex">
                     <h2 className="text-lg p-1">สถานะแจ้งซ่อม</h2>
-                    <button className="bg-slate-600 rounded-lg w-10 ml-2 hover:bg-slate-700">
+                    <button className="bg-slate-600 rounded-lg w-10 ml-2 hover:bg-slate-700" onClick={() => setShow(true)}>
                         <FontAwesomeIcon icon={faGear} color="white" />
                     </button>
                 </div>
-                <h2 className="text-lg bg-stone-600 text-white rounded-lg p-1 cursor-pointer">{data.Status}</h2>
+                <h2 className={`text-lg text-white rounded-lg p-1 cursor-pointer
+                ${data.Status == "Open" ? "bg-indigo-500 hover:bg-indigo-600"
+                : data.Status == "In Progress" ? "bg-orange-500 hover:bg-orange-600"
+                : data.Status == "Wait" ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"}`}>{data.Status}</h2>
             </div>
             <div className="flex justify-between my-10">
                 <h2 className="text-lg p-1">ลำดับความสำคัญ</h2>
                 <h2 className={`text-lg text-white rounded-lg p-1 cursor-pointer
-                ${data.Priority == "high" ? 'bg-red-600 hover:bg-red-700' : data.Priority == "medium" ? 'bg-orange-500 hover:bg-orange-600' : 'bg-green-500 hover:bg-green-600'}
+                ${data.Priority == "high" ? 'bg-red-600 hover:bg-red-700' : data.Priority == "medium" ? 'bg-purple-500 hover:bg-purple-600' : 'bg-green-500 hover:bg-green-600'}
                 `}>{data.Priority}</h2>
             </div>
             <div className="flex flex-col my-10">
@@ -138,7 +161,40 @@ const ViewTicketTechnician = () => {
             </div>
             <p className="text-lg font-semibold">จากผู้ใช้งาน : {comment.user_Username}</p>
     </div>
+    
+    <Modal  isVisible={show} onClose={() => setShow(false)}>
+        <div className="my-5">
+        <h3 className="text-xl text-center font-semibold">อัพเดทสถานะแจ้งซ่อม</h3>
+        </div>
+        
+        <div className="flex justify-center">
+            <ul className="steps w-full">
+                <li className="step step-primary">Open</li>
+                <li className={`step ${data.Status == "In Progress" || data.Status == "Wait" ? 'step-primary' : ''}`}>In Progress</li>
+                <li className={`step ${data.Status == "Wait" ? 'step-primary' : ''}`}>Wait</li>
+                <li className={`step ${data.Status == "Conplete" ? 'step-primary' : ''}`}>Complete</li>
+            </ul>
+        </div>
 
+        <div className="my-8 text-center">
+            <h4 className="font-semibold text-lg">
+                {data.Status == "Open" ? 
+                "สถานะ Open คือ รอช่างยืนยันเพื่อเริ่มทำงานในขั้นตอนถัดไป"
+                : data.Status == "In Progress" ? 
+                "สถานะ In Progress คือ กำลังดำเนินการ"
+                : data.Status == "Wait" ?
+                "สถานะ Wait คือ รอการยืนยันจากผู้แจ้งว่าเสร็จสิ้นหรือไม่"
+                : "สถานะ Complete คือ เสร็จสิ้นสมบูรณ์"}
+            </h4>
+        </div>
+
+        <div className={`m-8 ${data.Status == "Wait" ? "hidden" : ''}`}>
+            <button className="font-semibold text-lg bg-green-600 text-white rounded-xl w-full text-center h-8 hover:bg-green-700"
+            onClick={() => changeStatusTicketByTechnician(localStorage.userinfo)}
+            >อัพเดทสถานะ</button>
+        </div>
+
+    </Modal>
     </div>
     </>
   )

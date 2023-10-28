@@ -47,6 +47,19 @@ const ViewTicketUser = () => {
         fetchTicket(localStorage.userinfo)
       } ,[])
 
+      const statusComplete = async (authtoken : string) => {
+            await axios.post(`${import.meta.env.VITE_API}/ticket/update_ticket`,{ 
+                "Status" : `Complete`,
+                "TicketID" : data.TicketID
+                },{
+                    headers: {
+                        authtoken
+                },
+            }).then((response) => {
+                fetchTicket(localStorage.userinfo)
+            })
+      }
+
   return (
     <>
     <div className="grid grid-cols-1 xl:grid-cols-2">
@@ -71,7 +84,10 @@ const ViewTicketUser = () => {
                 <div className="flex">
                     <h2 className="text-lg p-1">สถานะแจ้งซ่อม</h2>
                 </div>
-                <h2 className="text-lg bg-stone-600 text-white rounded-lg p-1 cursor-pointer">{data.Status}</h2>
+                <h2 className={`text-lg text-white rounded-lg p-1 cursor-pointer
+                ${data.Status == "Open" ? "bg-indigo-500 hover:bg-indigo-600"
+                : data.Status == "In Progress" ? "bg-orange-500 hover:bg-orange-600"
+                : data.Status == "Wait" ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"}`}>{data.Status}</h2>
             </div>
             <div className="flex justify-between my-10">
                 <h2 className="text-lg p-1">ลำดับความสำคัญ</h2>
@@ -89,9 +105,17 @@ const ViewTicketUser = () => {
     </div>
 
     <div className="m-10 max-w-lg">
-        <div className="flex">
+        <div className="flex mb-5">
             <h2 className="text-xl font-semibold text-sky-700">ผู้รับผิดชอบ</h2>
             <h3 className="text-lg ml-4 font-semibold">{!!data.Assignee_Username ? data.Assignee_Username : 'ยังไม่มีผู้รับผิดชอบ'}</h3>
+        </div>
+
+        <hr />
+
+        <div className={` flex-col text-center w-auto ${data.Status == "Wait" ? "flex" : "hidden"}`}>
+            <img src="https://img.freepik.com/free-photo/smiling-auto-mechanic-with-wrench-standing-hands-folded-white-background_662251-2939.jpg?size=626&ext=jpg&ga=GA1.1.386372595.1697846400&semt=ais" alt="" />
+            <h2 className="text-xl font-semibold text-green-600 my-5">กรุณายืนยันว่า Ticket นี้ได้แก้ปัญหาเสร็จสิ้นสมบูรณ์แล้ว</h2>
+            <button onClick={() => statusComplete(localStorage.userinfo)} className="text-xl bg-green-600 text-white rounded-lg w-auto p-1 h-10  hover:bg-green-700">ยืนยัน</button>
         </div>
     </div>
   

@@ -165,7 +165,10 @@ const ViewTicket = () => {
                 <div className="flex">
                     <h2 className="text-lg p-1">สถานะแจ้งซ่อม</h2>
                 </div>
-                <h2 className="text-lg bg-stone-600 text-white rounded-lg p-1 cursor-pointer">{data.Status}</h2>
+                <h2 className={`text-lg text-white rounded-lg p-1 cursor-pointer
+                ${data.Status == "Open" ? "bg-indigo-500 hover:bg-indigo-600"
+                : data.Status == "In Progress" ? "bg-orange-500 hover:bg-orange-600"
+                : data.Status == "Wait" ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"}`}>{data.Status}</h2>
             </div>
             <div className="flex justify-between my-10">
                 <h2 className="text-lg p-1">ลำดับความสำคัญ</h2>

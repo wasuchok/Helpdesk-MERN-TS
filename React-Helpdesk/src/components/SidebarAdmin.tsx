@@ -4,7 +4,8 @@ import {
     faUserGroup,
     faRightFromBracket,
     faCalendarDays,
-    faFile
+    faFile,
+    faClockRotateLeft
  } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom'
 
@@ -26,12 +27,12 @@ const SidebarAdmin = () => {
   <Link to="/admin/" className="flex items-center space-x-1 rounded-md px-2 py-3 hover:bg-gray-100 hover:text-blue-600">
     <span className="text-2xl"><i className="bx bx-cart" /></span>
     <FontAwesomeIcon icon={faUserGroup} />
-    <span className="pl-2">รายการแจ้งซ่อม</span>
+    <span className="pl-2">รายการแจ้งซ่อมทั้งหมด</span>
   </Link>
-  <Link to="/admin/" className="flex items-center space-x-1 rounded-md px-2 py-3 hover:bg-gray-100 hover:text-blue-600">
+  <Link to="/admin/history_report" className="flex items-center space-x-1 rounded-md px-2 py-3 hover:bg-gray-100 hover:text-blue-600">
     <span className="text-2xl"><i className="bx bx-cart" /></span>
-    <FontAwesomeIcon icon={faFile} />
-    <span className="pl-2">ประวัติการแจ้งซ่อม</span>
+    <FontAwesomeIcon icon={faClockRotateLeft} />
+    <span className="pl-2">ประวัติการแจ้งซ่อมที่สำเร็จ</span>
   </Link>
   <a href="#" className="flex items-center space-x-1 rounded-md px-2 py-3 hover:bg-gray-100 hover:text-blue-600">
     <span className="text-2xl"><i className="bx bx-user" /></span>

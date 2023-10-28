@@ -3,12 +3,12 @@ import { NextFunction, Request, Response } from 'express'
 import { getRepository } from 'typeorm';
 import { Ticket } from '../entity/Ticket';
 import { Comment } from '../entity/Comment';
-
+import { Not } from "typeorm";
 
 export const read_all_ticket = async (req: Request, res: Response) => {
     try {
         const ticketRepository = getRepository(Ticket);
-        const ticket = await ticketRepository.find();
+        const ticket = await ticketRepository.find({ where : { Status : Not("Complete")}});
         res.send(ticket);
     } catch (err) {
         console.log(err);
@@ -20,7 +20,7 @@ export const read_all_ticket = async (req: Request, res: Response) => {
 export const read_ticket_by_all_single = async (req : Request, res : Response) => {
     try {
         const ticketRepository = getRepository(Ticket);
-        const ticket = await ticketRepository.find({ where: { "RequesterID" : req.body.user1.UserID } });
+        const ticket = await ticketRepository.find({ where : { "RequesterID" : req.body.user1.UserID ,  Status: Not("Complete")}})
         res.send(ticket);
     } catch (err) {
         console.log(err);
@@ -153,7 +153,7 @@ export const delete_ticket = async (req: Request, res: Response) => {
 export const read_ticket_all_single_by_technician = async (req : any, res : Response) => {
     try {
         const ticketRepository = getRepository(Ticket)
-        const ticket = await ticketRepository.find({ where : { "AssigneeID" : req.body.user1.UserID }})
+        const ticket = await ticketRepository.find({ where : { "AssigneeID" : req.body.user1.UserID ,  Status: Not("Complete")}})
         if(ticket) {
             res.send(ticket)
         }
@@ -163,3 +163,25 @@ export const read_ticket_all_single_by_technician = async (req : any, res : Resp
     }
 }
 
+export const read_history_report_ticket_by_admin = async (req : Request, res : Response) => {
+    try {
+        const ticketRepository = getRepository(Ticket)
+        const ticket = await ticketRepository.find({ where : { Status : "Complete" }})
+        if(ticket) {
+            res.send(ticket)
+        }
+    } catch (err) {
+        console.log(err)
+        res.status(500).send('Server Error')
+    }
+}
+
+export const read_history_report_ticket_by_technician = async (req : Request, res : Response) => {
+    try {
+        const ticketRepository = getRepository(Ticket)
+        const ticket = await ticketRepository.find({ where : { "AssigneeID" : req.body.user1.UserID, "Status" : "Complete" }})
+    } catch (err) {
+        console.log(err)
+        res.status(500).send('Server Error')
+    }
+}

@@ -1,13 +1,17 @@
 
-import moment from "moment";
+import dayjs from 'dayjs';
 import axios from "axios";
 import { DataTable } from "mantine-datatable";
 import { useState, useEffect } from "react";
-
+import 'dayjs/locale/th';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { faEye, faWrench } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+
+dayjs.extend(relativeTime);
+dayjs.locale('th');
 
 
 
@@ -28,9 +32,10 @@ interface ITicket {
 
 const PAGE_SIZES = [3, 5, 15];
 
+
+
 const TableAllTicketByTechnician = () => {
   const [pageSize, setPageSize] = useState(PAGE_SIZES[1]);
-
   useEffect(() => {
     setPage(1);
   }, [pageSize]);
@@ -76,9 +81,13 @@ const TableAllTicketByTechnician = () => {
   return (
     <>
       <DataTable
+        className="custom-font"
+        shadow="xl"
         withBorder
-        borderRadius="sm"
+        borderRadius="lg"
         withColumnBorders
+        minHeight={150}
+        noRecordsText="No data found.."
         striped
         highlightOnHover
         records={records}
@@ -90,39 +99,59 @@ const TableAllTicketByTechnician = () => {
           },
           {
             accessor: "Image",
-            title: "Image",
+            title: "รูป",
             render: ({ Image }) => (
                 <img src={Image} className="w-36 mx-auto" />
             )
           },
           {
             accessor: "Title",
-            title: "Title",
+            title: "หัวข้อปัญหา",
           },
           {
             accessor: "Status",
-            title: "Status",
+            title: "สถานะการแจ้งซ่อม",
+            render: ({ Status }) => (
+               <button className={`text-white font-bold w-24 h-8 rounded-lg
+               ${Status == "Open" ? "bg-indigo-500 hover:bg-indigo-600"
+              : Status == "In Progress" ? "bg-orange-500 hover:bg-orange-600"
+              : Status == "Wait" ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"}
+               `
+              }>{Status}</button>
+            )
           },
           {
             accessor: "Priority",
-            title: "Priority",
+            title: "ลำดับความสำคัญ",
+            render: ({ Priority }) => (
+              <button className={`text-white w-20 font-bold h-8 rounded-lg capitalize
+              ${Priority == "high" ? 'bg-red-600 hover:bg-red-700'
+              : Priority == "medium" ? 'bg-purple-600 hover:bg-purple-700' : 'bg-emerald-600 hover:bg-emerald-700'  }
+              `}>{Priority}</button>
+            )
           },
           {
             accessor: "Description",
-            title: "Description",
+            title: "รายละเอียด",
+            render: ({ Description }) => (
+              <p className="truncate">{Description}</p>
+            )
           },
           {
             accessor: "createdAt",
-            title: "Create",
-            render: ({ CreatedDate }) => moment(CreatedDate).format("ll"),
+            title: "วันที่สร้าง",
+            render: ({ CreatedDate }) => dayjs(CreatedDate).format('D MMMM YYYY เวลา HH:mm')
           },
           {
             accessor: "updatedAt",
-            title: "Update",
-            render: ({ UpdatedDate }) => moment(UpdatedDate).fromNow(),
+            title: "อัพเดท",
+            render: ({ UpdatedDate }) => (
+              dayjs(UpdatedDate).fromNow()
+            ),
           },
           {
             accessor: "Tools",
+            title : "เครื่องมือ",
             width: 130,
             render: ({ TicketID }) => (
               <div className="">

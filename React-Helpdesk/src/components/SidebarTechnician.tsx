@@ -1,5 +1,6 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { 
+  faClockRotateLeft,
     faHouse,
     faRightFromBracket
  } from '@fortawesome/free-solid-svg-icons'
@@ -14,6 +15,11 @@ const SidebarTechnician = () => {
     <span className="text-2xl"><i className="bx bx-home" /></span>
     <FontAwesomeIcon icon={faHouse} />
     <span className="pl-2">ตารางการแจ้งซ่อม</span>
+  </Link>
+  <Link to="/admin/" className="flex items-center space-x-1 rounded-md px-2 py-3 hover:bg-gray-100 hover:text-blue-600">
+    <span className="text-2xl"><i className="bx bx-home" /></span>
+    <FontAwesomeIcon icon={faClockRotateLeft} />
+    <span className="pl-2">ประวัติการแจ้งซ่อมที่สำเร็จ</span>
   </Link>
   <a href="#" className="flex items-center space-x-1 rounded-md px-2 py-3 hover:bg-gray-100 hover:text-blue-600">
     <span className="text-2xl"><i className="bx bx-user" /></span>

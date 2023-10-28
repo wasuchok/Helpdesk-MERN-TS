@@ -11,6 +11,7 @@ import Navbar from "./components/Navbar";
 //Admin
 import Admin from './pages/Admin/Index';
 import ViewTicket from './pages/Admin/ViewTicket'
+import HistoryReport from './pages/Admin/HistoryReport';
 
 //Technician
 import Technician from './pages/Technician/Index'
@@ -34,13 +35,11 @@ import { userLogin } from "./redux/slices/userSlice";
 
 
 //utils
-import ProtectedLogin from './utils/ProtectedLogin';
 import ProtectedRoute from './utils/ProtectedRoute';
 import SidebarUser from './components/SidebarUser';
-import ProtectedAdminRoute from './utils/ProtectedAdminRoute';
 import SidebarAdmin from './components/SidebarAdmin';
 import SidebarTechnician from './components/SidebarTechnician';
-import ProtectedTechnicianRoute from './utils/ProtectedTechnicianRoute';
+
 
 
 
@@ -167,6 +166,20 @@ const App = () => {
                 <div className="flex">
                   <SidebarAdmin />
                 <ViewTicket />
+                </div>
+              </ProtectedRoute>
+            }
+
+            
+          />
+
+          <Route
+            path="/admin/history_report"
+            element={
+              <ProtectedRoute allowedRoles={[1]}>
+                <div className="flex">
+                  <SidebarAdmin />
+                <HistoryReport />
                 </div>
               </ProtectedRoute>
             }

@@ -6,7 +6,7 @@ interface ModalType {
   children: ReactNode;
 }
 
-const ModalChooseTechnician : React.FC<ModalType> = ({
+const Modal : React.FC<ModalType> = ({
     isVisible,
     onClose,
     children
@@ -35,4 +35,4 @@ const ModalChooseTechnician : React.FC<ModalType> = ({
   )
 }
 
-export default ModalChooseTechnician
+export default Modal
