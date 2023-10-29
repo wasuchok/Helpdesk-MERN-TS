@@ -4,6 +4,7 @@ import { getRepository } from 'typeorm';
 import { Ticket } from '../entity/Ticket';
 import { Comment } from '../entity/Comment';
 import { Not } from "typeorm";
+import dayjs from 'dayjs';
 
 export const read_all_ticket = async (req: Request, res: Response) => {
     try {
@@ -180,8 +181,53 @@ export const read_history_report_ticket_by_technician = async (req : Request, re
     try {
         const ticketRepository = getRepository(Ticket)
         const ticket = await ticketRepository.find({ where : { "AssigneeID" : req.body.user1.UserID, "Status" : "Complete" }})
+        if(ticket) {
+            res.send(ticket)
+        }
     } catch (err) {
         console.log(err)
         res.status(500).send('Server Error')
     }
 }
+
+export const read_history_report_ticket_by_user = async (req : Request, res : Response) => {
+    try {
+        const ticketRepository = getRepository(Ticket)
+        const ticket = await ticketRepository.find({ where : { "RequesterID" : req.body.user1.UserID, "Status" : "Complete" }})
+        if(ticket) res.send(ticket)
+    } catch (err) {
+        console.log(err)
+        res.status(500).send('Server Error')
+    }
+}
+
+export const read_ticket_all_technician_by_admin = async (req : any, res : Response) => {
+    try {
+        const ticketRepository = getRepository(Ticket)
+        const ticket = await ticketRepository.find({ where : { "AssigneeID" : req.params.AssigneeID ,  Status: Not("Complete")}})
+        if(ticket) {
+            res.send(ticket)
+        }
+    } catch (err) {
+        console.log(err);
+        res.status(500).send('Server Error');
+    }
+}
+
+export const read_ticket_today = async (req : Request, res : Response) => {
+    try {
+        let today = dayjs().format("YYYY-MM-DD")
+        const ticketRepository = getRepository(Ticket)
+        const ticket = await ticketRepository
+        .createQueryBuilder('ticket')
+        .select(['ticket.Status', 'COUNT(ticket.Status) AS StatusCount'])
+        .where("DATE(ticket.CreatedDate) = :today", { today })
+        .groupBy('ticket.Status')
+        .getRawMany();
+        if(ticket) res.send(ticket)
+    } catch (err) {
+        console.log(err)
+        res.status(500).send('Server Error')
+    }
+}
+

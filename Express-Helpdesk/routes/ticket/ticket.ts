@@ -8,7 +8,20 @@ const router = Router();
 import { auth_user, check_admin } from '../../controller/users';
 
 //ticket
-import { create_ticket, read_all_ticket, read_ticket_by_all_single, read_ticket_single, create_commentText, read_ticket_all_single_by_technician, read_comment_by_technician, update_ticket } from "../../controller/ticket";
+import { 
+    create_ticket, 
+    read_all_ticket, 
+    read_ticket_by_all_single, 
+    read_ticket_single, 
+    create_commentText,
+    read_ticket_all_single_by_technician, 
+    read_comment_by_technician, 
+    update_ticket,
+    read_history_report_ticket_by_user,
+    read_history_report_ticket_by_technician,
+    read_ticket_all_technician_by_admin,
+    read_ticket_today
+} from "../../controller/ticket";
 
 
 
@@ -22,6 +35,10 @@ router.post('/', auth_user, create_ticket);
 router.post('/comment', auth_user, check_admin, create_commentText);
 router.get('/read_ticket_single/:TicketID', auth_user,  read_ticket_single)
 router.post('/update_ticket', auth_user, update_ticket)
+router.get('/read_history_report_ticket_by_user', auth_user, read_history_report_ticket_by_user)
+router.get('/read_history_report_ticket_by_technician', auth_user, read_history_report_ticket_by_technician)
+router.get('/read_ticket_all_technician_by_admin/:AssigneeID', auth_user, read_ticket_all_technician_by_admin)
+router.get('/read_ticket_today_by_admin', auth_user, check_admin, read_ticket_today)
 
 
 

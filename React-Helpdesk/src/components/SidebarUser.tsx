@@ -17,7 +17,7 @@ const SidebarUser = () => {
     <FontAwesomeIcon icon={faHouse} />
     <span className="pl-2">ดูความคืบหน้าการแจ้งซ่อม</span>
   </Link>
-  <Link to="/" className="flex items-center space-x-1 rounded-md px-2 py-3 hover:bg-gray-100 hover:text-blue-600">
+  <Link to="/history_report" className="flex items-center space-x-1 rounded-md px-2 py-3 hover:bg-gray-100 hover:text-blue-600">
     <span className="text-2xl"><i className="bx bx-home" /></span>
     <FontAwesomeIcon icon={faClockRotateLeft} />
     <span className="pl-2">ประวัติการแจ้งซ่อมที่สำเร็จ</span>

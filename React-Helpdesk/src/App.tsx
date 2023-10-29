@@ -12,16 +12,20 @@ import Navbar from "./components/Navbar";
 import Admin from './pages/Admin/Index';
 import ViewTicket from './pages/Admin/ViewTicket'
 import HistoryReport from './pages/Admin/HistoryReport';
+import Dashboard from './pages/Admin/Dashboard';
 
 //Technician
 import Technician from './pages/Technician/Index'
 import ViewTicketTechnician from './pages/Technician/ViewTicketTechnician';
+import HistoryReportByTechnician from './pages/Technician/HistoryReport';
+import TableWorkTechnician from './pages/Admin/TableWorkTechnician';
 
 
 //User
 import Index from "./pages/Home/Index";
 import TicketForm from './pages/Home/TicketForm';
 import ViewTicketUser from './pages/Home/ViewTicketUser';
+import HistoryReportByUser from './pages/Home/HistoryReport';
 
 //Auth
 import Register from "./pages/Auth/Register";
@@ -39,6 +43,8 @@ import ProtectedRoute from './utils/ProtectedRoute';
 import SidebarUser from './components/SidebarUser';
 import SidebarAdmin from './components/SidebarAdmin';
 import SidebarTechnician from './components/SidebarTechnician';
+
+
 
 
 
@@ -125,6 +131,18 @@ const App = () => {
             }
           />
 
+          <Route 
+          path="/history_report"
+          element={
+            <ProtectedRoute allowedRoles={[6]}>
+              <div className="flex">
+                <SidebarUser />
+                <HistoryReportByUser />
+              </div>
+            </ProtectedRoute>
+          }
+          />
+
           <Route
             path="/register"
             element={
@@ -169,8 +187,6 @@ const App = () => {
                 </div>
               </ProtectedRoute>
             }
-
-            
           />
 
           <Route
@@ -180,6 +196,30 @@ const App = () => {
                 <div className="flex">
                   <SidebarAdmin />
                 <HistoryReport />
+                </div>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/table_work_technician"
+            element={
+              <ProtectedRoute allowedRoles={[1]}>
+                <div className="flex">
+                  <SidebarAdmin />
+                <TableWorkTechnician />
+                </div>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/admin/dashboard_admin"
+            element={
+              <ProtectedRoute allowedRoles={[1]}>
+                <div className="flex">
+                  <SidebarAdmin />
+                <Dashboard />
                 </div>
               </ProtectedRoute>
             }
@@ -208,6 +248,18 @@ const App = () => {
                 <div className="flex">
                   <SidebarTechnician />
                 <ViewTicketTechnician />
+                </div>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route 
+            path="/technician/history_report"
+            element={
+              <ProtectedRoute allowedRoles={[2,3,4,5]}>
+                <div className="flex">
+                  <SidebarTechnician />
+                <HistoryReportByTechnician />
                 </div>
               </ProtectedRoute>
             }

@@ -1,17 +1,13 @@
-import ModalChooseTechnician from '../components/Modal'
-import ModalComment from '../components/Modal'
 
 import axios from "axios";
 import { DataTable } from "mantine-datatable";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-import { faCheck, faEye,faUserGear} from "@fortawesome/free-solid-svg-icons";
+import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 
-import { useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
 import dayjs from 'dayjs';
 
 
@@ -30,18 +26,11 @@ interface ITicket {
     UpdatedDate? : any
 }
 
-interface technicianType {
-  UserID : number
-  Username : string
-  Email : string
-  role_RoleName : string
-}
 
 
 const PAGE_SIZES = [3, 5, 15];
 
 const TableHistoryReportByAdmin = () => {
-  const { userinfo } = useSelector((state : RootState) => state.user)
   const [pageSize, setPageSize] = useState(PAGE_SIZES[1]);
 
   useEffect(() => {
@@ -79,12 +68,6 @@ const TableHistoryReportByAdmin = () => {
   useEffect(() => {
     FetchAllTicket(localStorage.userinfo);
   }, []);
-
-
-
-  const [idtechnician, setIdTechnician] = useState<number>(0);
-  const [ticketID, setTicketID] = useState<number>(0)
-  const commentText = useRef<any>("")
 
 
   return (

@@ -4,6 +4,7 @@ import { Users } from '../entity/Users';
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { User } from '../types/User'
+import { Not } from "typeorm";
 
 export const read_all_users = async (req: Request, res: Response) => {
     try {
@@ -162,3 +163,20 @@ export const check_admin = async (req : Request, res : Response, next : NextFunc
         res.status(500).send('Server Error');
     }
 }
+
+// export const read_all_technician_by_admin = async (req : Request, res : Response) => {
+//     try {
+//         const userRepository = getRepository(Users);
+//         const users = await userRepository
+//         .createQueryBuilder('user')
+//         .where('user.Role != :role1', { role1: 1 })
+//         .andWhere('user.Role != :role2', { role2: 6 })
+//         .getMany();
+//         if(users) {
+//             res.send(users)
+//         }
+//     } catch (err) {
+//         console.log(err)
+//         res.status(500).send('Server Error')
+//     }
+// }
