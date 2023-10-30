@@ -8,7 +8,7 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 
 
-const StatusChartDay = () => {
+const StatusChart = () => {
 
     let AllStatus = [
         {
@@ -79,10 +79,9 @@ const StatusChartDay = () => {
 
   return (
     <div className="">
-      <h2 className="text-lg font-semibold my-5 bg-sky-600 rounded-lg p-2 w-auto xl:w-80 mx-auto text-center text-white hover:bg-sky-700 cursor-pointer">กราฟแสดงสถานะของการร้องขอรายวัน</h2>
       <Pie data={pieChartData} options={options} />
     </div>
   );
 };
 
-export default StatusChartDay;
+export default StatusChart;

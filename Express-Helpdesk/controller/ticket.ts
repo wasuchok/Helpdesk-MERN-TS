@@ -221,7 +221,7 @@ export const read_ticket_today = async (req : Request, res : Response) => {
         const ticket = await ticketRepository
         .createQueryBuilder('ticket')
         .select(['ticket.Status', 'COUNT(ticket.Status) AS StatusCount'])
-        .where("DATE(ticket.CreatedDate) = :today", { today })
+        // .where("DATE(ticket.CreatedDate) = :today", { today })
         .groupBy('ticket.Status')
         .getRawMany();
         if(ticket) res.send(ticket)
