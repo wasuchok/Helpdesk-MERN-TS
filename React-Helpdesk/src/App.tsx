@@ -1,5 +1,6 @@
 
 import axios from 'axios'
+import { useEffect, useState } from 'react';
 
 
 //Router
@@ -52,6 +53,24 @@ import SidebarTechnician from './components/SidebarTechnician';
 const App = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
+
+  const [roletechnician, setRoleTechnician] = useState<any>([])
+
+
+  const fectchRoleArray = async (authtoken : string) => {
+    await axios.get(`${import.meta.env.VITE_API}/users/read_all_access_role`, {
+      headers : {
+        authtoken
+      }
+    }).then((response) => {
+      setRoleTechnician(response.data[1].Role_ID_Array.split(",").map(Number))
+    })
+  }
+
+  useEffect(() => {
+    fectchRoleArray(localStorage.userinfo)
+  },[])
+
   
     const currentUser = async (authtoken: string) => {
       try {
@@ -232,7 +251,7 @@ const App = () => {
           <Route
             path="/technician/"
             element={
-              <ProtectedRoute allowedRoles={[2,3,4,5]}>
+              <ProtectedRoute allowedRoles={roletechnician}>
                 <div className="flex">
                   <SidebarTechnician />
                 <Technician />

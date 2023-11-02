@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { User } from '../types/User'
 import { Not } from "typeorm";
+import { Access } from '../entity/Access';
 
 export const read_all_users = async (req: Request, res: Response) => {
     try {
@@ -161,6 +162,29 @@ export const check_admin = async (req : Request, res : Response, next : NextFunc
     } catch (err) {
         console.log(err);
         res.status(500).send('Server Error');
+    }
+}
+
+export const read_all_access_role = async (req : Request, res : Response) => {
+    try {
+        const accessRepository = getRepository(Access)
+        const access = await accessRepository.find()
+        if(access) res.send(access)
+    } catch (err) {
+        console.log(err)
+        res.status(500).send('Server Error')
+    }
+}
+
+export const create_access = async (req : Request, res : Response) => {
+    try {
+        const accessRepository = getRepository(Access)
+        const newAccess = accessRepository.create(req.body);
+        const result = await accessRepository.save(newAccess);
+        if(result) res.send(result)
+    } catch (err) {
+        console.log(err)
+        res.status(500).send('Server Error')        
     }
 }
 
